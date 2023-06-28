@@ -5,32 +5,35 @@ const initialState = {
     isAuth: false,
     isRemember: false,
     error: null,
+    token: null,
+    logged: false
 }
 
 const loginSlice = createSlice({
-    name: "login",
+    name: 'login',
     initialState,
-    reducers:{
-        loginPending: (state) => {
-            state.isLoading = true
-        },
-        loginSuccess: (state) => {
-            state.isLoading = false,
-            state.isAuth = true
-        },
-        loginError: (state) => {
-            state.isLoading = false,
-            state.isAuth = false
-        },
-        loginRemember: (state, action) => {
-            state.isRemember = action.payload
-        },
-        logOut: (state) => {
-            state.isAuth = false
-        }
+    reducers: {
+      setUsername(state, action) {
+        state.username = action.payload;
+      },
+      setPassword(state, action) {
+        state.password = action.payload;
+      },
+      setLoading(state, action) {
+        state.isLoading = action.payload;
+      },
+      setError(state, action) {
+        state.error = action.payload;
+      },
+      setToken(state, action) {
+        state.token = action.payload;
+      },
+      setLoggedIn(state, action) {
+        state.logged = action.payload
+      }
     }
-})
+});
 
-export const { loginPending, loginSuccess, loginError, loginRemember, logOut } = loginSlice.actions;
+export const { setUsername, setPassword, setLoading, setError, setToken, setLoggedIn } = loginSlice.actions;
 
 export const loginReducer = loginSlice.reducer;

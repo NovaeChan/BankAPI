@@ -1,73 +1,69 @@
-import React, { useState } from 'react';
-import { loginPending, loginSuccess, loginError, loginRemember } from '../reducers/login';
+import React, { useEffect, useState } from 'react';
+import { setUsername, setPassword, setToken, setLoggedIn } from '../reducers/login';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../api/apiCalls';
-
-
+import { fetchProfile, getLogin } from "../api/apiCalls"
+import { setFirstName, setLastName } from '../reducers/user';
 
 function Login() {
-    const { isLoading, error, isRemember } = useSelector((state) => state.login)
-    const dispatch = useDispatch()
-    let navigate = useNavigate()
-    const [credentials, setCredentials] = useState({
-        email: '',
-        password: '',
-    })
-    const handleChange = ({currentTarget}) => {
-        const {value, name} = currentTarget
-        setCredentials({
-            ...credentials,
-            [name] : value
-        })
-    }
-    
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
+    const email = useSelector(state => state.login.username)
+    const password = useSelector(state => state.login.password)
+
     const handleSubmit = async (event) => {
         event.preventDefault();
-        try{
-            const response = await login(credentials)
-            if(response != "error"){
-                const token = localStorage.getItem("token")
-                console.log(token);
-                if(userProfile !== "Not found"){
-                    dispatch(loginSuccess());
-                    navigate('./profilePage/Profile')
-                }
+        const response = await getLogin(email, password);
+
+        if(response.status === 200){
+            localStorage.setItem("token", response.body.token);
+            const token = localStorage.getItem("token");
+            const userData = await fetchProfile(token);
+            if(userData){
+                dispatch(setLoggedIn(true));
+                dispatch(setToken(token));
+                dispatch(setFirstName(userData.firstName));
+                dispatch(setLastName(userData.lastName));
+                navigate("/profilePage");
             }
-        }catch(error){
-           console.error(error)
-           dispatch(loginError(error.response.data.message)) 
         }
-        
+        if(response === "error"){
+            return(
+                alert("Identifiants erronés")
+            )
+        }
     }
+
+    const handleRemember = (event) => {
+        if(event.target.checked){
+            localStorage.setItem("remember", event.target.checked)
+        }
+        else{
+            localStorage.setItem("remember", event.target.checked)
+        }
+    }
+
     return (
         <main className="main bg-dark">
+            {}
             <section className="sign-in-content">
                 <i className="fa fa-user-circle sign-in-icon"></i>
                 <h1>Sign In</h1>
-                {error && <alert>{error}</alert>}
                 <form onSubmit={handleSubmit}>
                     <div className="input-wrapper">
                         <label htmlFor="username">Username</label>
-                        <input type="text" id="username" name="email" onChange={handleChange}/>
+                        <input type="text" id="username" name="email" required onChange={(event) => dispatch(setUsername(event.target.value))}/>
                     </div>
                     <div className="input-wrapper">
                         <label htmlFor="password">Password</label>
-                        <input type="password" id="password" name='password' onChange={handleChange}/>
+                        <input type="password" id="password" name='password' required onChange={(event) => dispatch(setPassword(event.target.value))}/>
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" name='remember-me' defaultChecked={isRemember} onChange={() => dispatch(loginRemember(!isRemember))}/>
+                        <input type="checkbox" id="remember-me" name='remember-me' onChange={handleRemember}/>
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
-                    {/* <!-- PLACEHOLDER DUE TO STATIC SITE --> */}
-                    {/* <a href="./user.html" className="sign-in-button">Sign In</a> */}
-                    {/* <!-- SHOULD BE THE BUTTON BELOW --> */}
                     <button className="sign-in-button">Sign In</button>
-                    {isLoading && (
-                        <div className="loading">
-                            <span>Loading...</span>
-                        </div>
-                    )}
                 </form>
             </section>
         </main>
