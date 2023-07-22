@@ -5,6 +5,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setLoggedIn } from '../../reducers/login';
 import { setFirstName, setLastName } from "../../reducers/user.js"
 
+import '../../styles/components/__header.scss'
+
 function Header() {
     const dispatch = useDispatch();
 
@@ -36,7 +38,7 @@ function Header() {
                     <h1 className="sr-only">Argent Bank</h1>
                 </NavLink>
                 <div>
-                    <NavLink to="/login">
+                    <NavLink to="/login" className='navigation-logout'>
                         <i className="fa fa-user-circle"></i>
                         Sign In
                     </NavLink>
@@ -55,13 +57,14 @@ function Header() {
                 <h1 className="sr-only">Argent Bank</h1>
             </NavLink>
             <div className="navigation">
-                <i className="fa fa-user-circle"></i>
-                <p className="user-name">{firstName}</p>
-                <NavLink to="/login" onClick={logOff} >
-                    {/* <FontAwesomeIcon icon={faArrowRightFromBracket} style={{marginLeft : 10, marginRight : 10}}></FontAwesomeIcon> */}
+                <NavLink to="/profilePage" className='navigation-profile'>
+                    <i className="fa fa-user-circle"></i>
+                    <p className="user-name">{firstName}</p>
+                </NavLink>
+                <NavLink to="/login" onClick={logOff} className='navigation-logout'>
+                    <i className="fa-solid fa-arrow-right-to-bracket"></i>
                     Sign out
                 </NavLink>
-            
         </div>
     </nav>
     )

@@ -4,10 +4,12 @@ import { updateUserProfile } from '../api/apiCalls'
 import { setUser, setLoading, setError, setFirstName, setLastName } from '../reducers/user'
 import { Navigate } from 'react-router-dom';
 
+import '../styles/profile.scss'
+
 const Profile = () => {
     const dispatch = useDispatch();
 
-    const isLogged = useSelector(state => state.login.logged);
+    const isLogged = localStorage.getItem("isLogged");
 
     if(!isLogged){
         return (

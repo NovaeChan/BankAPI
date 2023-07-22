@@ -5,6 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { fetchProfile, getLogin } from "../api/apiCalls"
 import { setFirstName, setLastName } from '../reducers/user';
 
+import '../styles/login.scss'
+
 function Login() {
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -25,6 +27,7 @@ function Login() {
                 dispatch(setToken(token));
                 dispatch(setFirstName(userData.firstName));
                 dispatch(setLastName(userData.lastName));
+                localStorage.setItem("isLogged", true);
                 navigate("/profilePage");
             }
         }

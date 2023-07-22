@@ -1,0 +1,33 @@
+.main-nav {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 20px;
+}
+.main-nav a {
+    color: #2c3e50;
+    font-weight: bold;
+}
+.main-nav a.router-link-exact-active {
+    color: #42b983;
+}
+.navigation{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &-profile{
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+
+    }
+    &-logout{
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+    }
+}
+.fa, .fa-solid{
+    margin-right: 5px;
+}
